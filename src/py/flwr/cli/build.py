@@ -14,56 +14,106 @@
 # ==============================================================================
 """Flower command line interface `build` command."""
 
+import hashlib
 import os
+import shutil
+import tempfile
 import zipfile
+from logging import DEBUG, ERROR
 from pathlib import Path
-from typing import Optional
+from typing import Annotated, Any, Optional, Union
 
 import pathspec
 import tomli_w
 import typer
-from typing_extensions import Annotated
+from hatchling.builders.wheel import WheelBuilder
+from hatchling.metadata.core import ProjectMetadata
+
+from flwr.common.constant import FAB_ALLOWED_EXTENSIONS, FAB_DATE, FAB_HASH_TRUNCATION
+from flwr.common.logger import log
 
 from .config_utils import load_and_validate
-from .utils import get_sha256_hash, is_valid_project_name
+from .utils import is_valid_project_name
 
 
-# pylint: disable=too-many-locals
+def write_to_zip(
+    zipfile_obj: zipfile.ZipFile, filename: str, contents: Union[bytes, str]
+) -> zipfile.ZipFile:
+    """Set a fixed date and write contents to a zip file."""
+    zip_info = zipfile.ZipInfo(filename)
+    zip_info.date_time = FAB_DATE
+    zipfile_obj.writestr(zip_info, contents)
+    return zipfile_obj
+
+
+def get_fab_filename(conf: dict[str, Any], fab_hash: str) -> str:
+    """Get the FAB filename based on the given config and FAB hash."""
+    publisher = conf["tool"]["flwr"]["app"]["publisher"]
+    name = conf["project"]["name"]
+    version = conf["project"]["version"].replace(".", "-")
+    fab_hash_truncated = fab_hash[:FAB_HASH_TRUNCATION]
+    return f"{publisher}.{name}.{version}.{fab_hash_truncated}.fab"
+
+
+def _build_app_wheel(app: Path) -> Path:
+    """Build app as a wheel and return its path."""
+    # Path to your project directory
+    app_dir = str(app.resolve())
+    try:
+
+        # Initialize the WheelBuilder
+        builder = WheelBuilder(
+            app_dir, metadata=ProjectMetadata(root=app_dir, plugin_manager=None)
+        )
+
+        # Build
+        whl_path = Path(next(builder.build(directory=app_dir)))
+        log(DEBUG, "Wheel succesfully built: %s", str(whl_path))
+    except Exception as ex:
+        log(ERROR, "Exception encountered when building wheel.", exc_info=ex)
+        raise typer.Exit(code=1) from ex
+
+    return whl_path
+
+
+# pylint: disable=too-many-locals, too-many-statements
 def build(
-    directory: Annotated[
+    app: Annotated[
         Optional[Path],
-        typer.Option(help="Path of the Flower project to bundle into a FAB"),
+        typer.Option(help="Path of the Flower App to bundle into a FAB"),
     ] = None,
-) -> str:
-    """Build a Flower project into a Flower App Bundle (FAB).
+) -> tuple[str, str]:
+    """Build a Flower App into a Flower App Bundle (FAB).
 
-    You can run ``flwr build`` without any arguments to bundle the current directory,
-    or you can use ``--directory`` to build a specific directory:
-    ``flwr build --directory ./projects/flower-hello-world``.
+    You can run ``flwr build`` without any arguments to bundle the app located in the
+    current directory. Alternatively, you can you can specify a path using the ``--app``
+    option to bundle an app located at the provided path. For example:
+
+    ``flwr build --app ./apps/flower-hello-world``.
     """
-    if directory is None:
-        directory = Path.cwd()
+    if app is None:
+        app = Path.cwd()
 
-    directory = directory.resolve()
-    if not directory.is_dir():
+    app = app.resolve()
+    if not app.is_dir():
         typer.secho(
-            f"❌ The path {directory} is not a valid directory.",
+            f"❌ The path {app} is not a valid path to a Flower app.",
             fg=typer.colors.RED,
             bold=True,
         )
         raise typer.Exit(code=1)
 
-    if not is_valid_project_name(directory.name):
+    if not is_valid_project_name(app.name):
         typer.secho(
-            f"❌ The project name {directory.name} is invalid, "
-            "a valid project name must start with a letter or an underscore, "
-            "and can only contain letters, digits, and underscores.",
+            f"❌ The project name {app.name} is invalid, "
+            "a valid project name must start with a letter, "
+            "and can only contain letters, digits, and hyphens.",
             fg=typer.colors.RED,
             bold=True,
         )
         raise typer.Exit(code=1)
 
-    conf, errors, warnings = load_and_validate(directory / "pyproject.toml")
+    conf, errors, warnings = load_and_validate(app / "pyproject.toml")
     if conf is None:
         typer.secho(
             "Project configuration could not be loaded.\npyproject.toml is invalid:\n"
@@ -81,18 +131,16 @@ def build(
             bold=True,
         )
 
+    # Build wheel
+    whl_path = _build_app_wheel(app)
+
+    # Add path to .whl to `[tool.flwr.app]`
+    conf["tool"]["flwr"]["app"]["whl"] = str(whl_path.name)
+
     # Load .gitignore rules if present
-    ignore_spec = _load_gitignore(directory)
+    ignore_spec = _load_gitignore(app)
 
-    # Set the name of the zip file
-    fab_filename = (
-        f"{conf['tool']['flwr']['app']['publisher']}"
-        f".{directory.name}"
-        f".{conf['project']['version'].replace('.', '-')}.fab"
-    )
     list_file_content = ""
-
-    allowed_extensions = {".py", ".toml", ".md"}
 
     # Remove the 'federations' field from 'tool.flwr' if it exists
     if (
@@ -104,43 +152,64 @@ def build(
 
     toml_contents = tomli_w.dumps(conf)
 
-    with zipfile.ZipFile(fab_filename, "w", zipfile.ZIP_DEFLATED) as fab_file:
-        fab_file.writestr("pyproject.toml", toml_contents)
+    with tempfile.NamedTemporaryFile(suffix=".zip", delete=False) as temp_file:
+        temp_filename = temp_file.name
 
-        # Continue with adding other files
-        for root, _, files in os.walk(directory, topdown=True):
-            files = [
+        with zipfile.ZipFile(temp_filename, "w", zipfile.ZIP_DEFLATED) as fab_file:
+            write_to_zip(fab_file, "pyproject.toml", toml_contents)
+
+            # Continue with adding other files
+            all_files = [
                 f
-                for f in files
-                if not ignore_spec.match_file(Path(root) / f)
-                and f != fab_filename
-                and Path(f).suffix in allowed_extensions
-                and f != "pyproject.toml"  # Exclude the original pyproject.toml
+                for f in app.rglob("*")
+                if not ignore_spec.match_file(f)
+                and f.name != temp_filename
+                and f.suffix in FAB_ALLOWED_EXTENSIONS
+                and f.name != "pyproject.toml"  # Exclude the original pyproject.toml
             ]
 
-            for file in files:
-                file_path = Path(root) / file
-                archive_path = file_path.relative_to(directory)
-                fab_file.write(file_path, archive_path)
+            # Include FAB .whl
+            all_files.append(whl_path)
+
+            for file_path in all_files:
+                # Read the file content manually
+                with open(file_path, "rb") as f:
+                    file_contents = f.read()
+
+                archive_path = file_path.relative_to(app)
+                write_to_zip(fab_file, str(archive_path), file_contents)
 
                 # Calculate file info
-                sha256_hash = get_sha256_hash(file_path)
+                sha256_hash = hashlib.sha256(file_contents).hexdigest()
                 file_size_bits = os.path.getsize(file_path) * 8  # size in bits
                 list_file_content += f"{archive_path},{sha256_hash},{file_size_bits}\n"
 
-        # Add CONTENT and CONTENT.jwt to the zip file
-        fab_file.writestr(".info/CONTENT", list_file_content)
+            # Add CONTENT and CONTENT.jwt to the zip file
+            write_to_zip(fab_file, ".info/CONTENT", list_file_content)
+
+    # Erase FAB .whl in app directory
+    whl_path.unlink()
+
+    # Get hash of FAB file
+    content = Path(temp_filename).read_bytes()
+    fab_hash = hashlib.sha256(content).hexdigest()
+
+    # Set the name of the zip file
+    fab_filename = get_fab_filename(conf, fab_hash)
+
+    # Once the temporary zip file is created, rename it to the final filename
+    shutil.move(temp_filename, fab_filename)
 
     typer.secho(
         f"🎊 Successfully built {fab_filename}", fg=typer.colors.GREEN, bold=True
     )
 
-    return fab_filename
+    return fab_filename, fab_hash
 
 
-def _load_gitignore(directory: Path) -> pathspec.PathSpec:
+def _load_gitignore(app: Path) -> pathspec.PathSpec:
     """Load and parse .gitignore file, returning a pathspec."""
-    gitignore_path = directory / ".gitignore"
+    gitignore_path = app / ".gitignore"
     patterns = ["__pycache__/"]  # Default pattern
     if gitignore_path.exists():
         with open(gitignore_path, encoding="UTF-8") as file:
