@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Flower main\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-07 00:31+0000\n"
+"POT-Creation-Date: 2025-07-24 00:32+0000\n"
 "PO-Revision-Date: 2024-08-23 13:09+0000\n"
 "Last-Translator: Seulki Yun <icstuckyi@gmail.com>\n"
 "Language: ko\n"
@@ -17,7 +17,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.16.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #: ../../source/contributor-explanation-public-and-private-apis.rst:2
 msgid "Public and private APIs"
@@ -750,12 +750,14 @@ msgstr ""
 " 잊지 마세요)."
 
 #: ../../source/contributor-how-to-install-development-versions.rst:14
+#, python-brace-format
 msgid ""
 "``flwr = { version = \"1.0.0a0\", allow-prereleases = true }`` (without "
 "extras)"
 msgstr "``flwr = { version = \"1.0.0a0\", allow-prereleases = true }`` (extras 제외)"
 
 #: ../../source/contributor-how-to-install-development-versions.rst:15
+#, python-brace-format
 msgid ""
 "``flwr = { version = \"1.0.0a0\", allow-prereleases = true, extras = "
 "[\"simulation\"] }`` (with extras)"
@@ -770,10 +772,12 @@ msgid ""
 msgstr "``pyproject.toml``을 통해 Flower 소스 코드의 로컬 복사본에서 ``flwr``을 설치하세요:"
 
 #: ../../source/contributor-how-to-install-development-versions.rst:20
+#, python-brace-format
 msgid "``flwr = { path = \"../../\", develop = true }`` (without extras)"
 msgstr "``flwr = { path = \"../../\", develop = true }`` (extras 제외)"
 
 #: ../../source/contributor-how-to-install-development-versions.rst:21
+#, python-brace-format
 msgid ""
 "``flwr = { path = \"../../\", develop = true, extras = [\"simulation\"] "
 "}`` (with extras)"
@@ -786,6 +790,7 @@ msgid "Install ``flwr`` from a local wheel file via ``pyproject.toml``:"
 msgstr "``pyproject.toml``을 통해 로컬 wheel file에서 ``flwr``을 설치하세요:"
 
 #: ../../source/contributor-how-to-install-development-versions.rst:25
+#, python-brace-format
 msgid ""
 "``flwr = { path = \"../../dist/flwr-1.8.0-py3-none-any.whl\" }`` (without"
 " extras)"
@@ -794,6 +799,7 @@ msgstr ""
 "제외)"
 
 #: ../../source/contributor-how-to-install-development-versions.rst:26
+#, python-brace-format
 msgid ""
 "``flwr = { path = \"../../dist/flwr-1.8.0-py3-none-any.whl\", extras = "
 "[\"simulation\"] }`` (with extras)"
@@ -2126,6 +2132,7 @@ msgid ""
 msgstr "(또는 ``<type>(<project>:skip) <subject>``를 사용하면 변경 로그에서 PR을 무시합니다.)"
 
 #: ../../source/contributor-tutorial-contribute-on-github.rst:372
+#, python-brace-format
 msgid ""
 "Where ``<type>`` needs to be in ``{ci, fix, feat, docs, refactor, "
 "break}``, ``<project>`` should be in ``{framework, baselines, datasets, "
@@ -4607,7 +4614,7 @@ msgstr ""
 "Range(A)에 대해 (:math:`\\epsilon`, :math:`\\delta`)-차등 프라이버시를 제공합니다:"
 
 #: ../../source/explanation-differential-privacy.rst:42
-#, fuzzy
+#, fuzzy, python-brace-format
 msgid ""
 "\\small\n"
 "P[M(D_{1} \\in A)] \\leq e^{\\epsilon} P[M(D_{2} \\in A)] + \\delta"
@@ -6761,6 +6768,7 @@ msgid "VM Networking"
 msgstr ""
 
 #: ../../source/how-to-run-flower-on-azure.rst:86
+#, python-brace-format
 msgid ""
 "During the execution of the Flower application, the server VM "
 "(``SuperLink``) will be responsible to orchestrate the execution of the "
@@ -7781,6 +7789,7 @@ msgid "``flwr = \"^1.0.0\"`` (when using ``start_server`` and ``start_client``)"
 msgstr "``flwr = \"^1.0.0\"``(``start_server`` 및 ``start_client`` 사용 시)"
 
 #: ../../source/how-to-upgrade-to-flower-1.0.rst:33
+#, python-brace-format
 msgid ""
 "``flwr = { version = \"^1.0.0\", extras = [\"simulation\"] }`` (when "
 "using ``start_simulation``)"
@@ -7858,6 +7867,7 @@ msgstr ""
 "전달합니다. 다음은 예제입니다:"
 
 #: ../../source/how-to-upgrade-to-flower-1.0.rst:65
+#, python-brace-format
 msgid ""
 "Flower 0.19: ``start_server(..., config={\"num_rounds\": 3, "
 "\"round_timeout\": 600.0}, ...)``"
@@ -9328,6 +9338,7 @@ msgid "**Run ID:** Unique identifier for the run."
 msgstr "현재 실행에 대한 식별자입니다."
 
 #: ../../flwr ls:1
+#, python-brace-format
 msgid ""
 "**FAB:** Name of the FAB associated with the run (``{FAB_ID} "
 "(v{FAB_VERSION})``)."
@@ -12227,12 +12238,14 @@ msgid "Return -1 on failure."
 msgstr "실패 시 -1을 반환합니다."
 
 #: flwr.common.EventType.format:1 of
+#, python-brace-format
 msgid ""
 "Return a formatted version of S, using substitutions from args and "
 "kwargs. The substitutions are identified by braces ('{' and '}')."
 msgstr "args와 kwargs의 치환을 사용하여 형식이 지정된 S를 반환합니다. 치환은 중괄호('{' 및 '}')로 식별됩니다."
 
 #: flwr.common.EventType.format_map:1 of
+#, python-brace-format
 msgid ""
 "Return a formatted version of S, using substitutions from mapping. The "
 "substitutions are identified by braces ('{' and '}')."
@@ -15999,6 +16012,7 @@ msgid ""
 msgstr ""
 
 #: flwr.server.strategy.fedprox.FedProx:9 of
+#, python-brace-format
 msgid ""
 "\\\\frac{\\\\mu}{2} || w - w^t ||^2\n"
 "\n"
@@ -17725,6 +17739,7 @@ msgid ""
 msgstr ""
 
 #: ../../source/ref-changelog.md:127
+#, python-brace-format
 msgid ""
 "SuperExec has been integrated into SuperLink, enabling SuperLink to "
 "directly manage ServerApp processes (`flwr-serverapp`). The `flwr` CLI "
@@ -22148,6 +22163,7 @@ msgid ""
 msgstr ""
 
 #: ../../source/ref-changelog.md:1228
+#, python-brace-format
 msgid ""
 "Instead of a config dictionary `{\"num_rounds\": 3, \"round_timeout\": "
 "600.0}`, `start_server` and `start_simulation` now expect a configuration"
@@ -23115,6 +23131,7 @@ msgid ""
 msgstr ""
 
 #: ../../source/ref-changelog.md:1513
+#, python-brace-format
 msgid ""
 "Strategy implementations should migrate their `aggregate_fit` and "
 "`aggregate_evaluate` methods to the new return type (e.g., by simply "
@@ -26435,6 +26452,7 @@ msgid "Where's the accuracy?"
 msgstr ""
 
 #: ../../source/tutorial-series-get-started-with-flower-pytorch.ipynb:707
+#, python-brace-format
 msgid ""
 "You may have noticed that all metrics except for ``losses_distributed`` "
 "are empty. Where did the ``{\"accuracy\": float(accuracy)}`` go?"
@@ -26849,7 +26867,7 @@ msgstr ""
 " 수도 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:41
-msgid "|2de22ebd50a840dba14a673c6fed3ed5|"
+msgid "|f11f12bdaa3142b88692e40061ad1eeb|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:109
@@ -26866,7 +26884,7 @@ msgstr ""
 " 바둑과 같은 게임을 하는 것일 수 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:53
-msgid "|40524cd4aa474db2992d8a8c40807297|"
+msgid "|7e64576ed66a4421a993e86e1f82ddad|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:111
@@ -26892,7 +26910,7 @@ msgstr ""
 "부르리는 것을 듣는 스마트 스피커에서 비롯됩니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:67
-msgid "|9da60840ee0644b092f05ba73173f33a|"
+msgid "|54c3e349c8af49f49c61316afe955b2f|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:113
@@ -26910,7 +26928,7 @@ msgstr ""
 "있습니다. 하지만 여러 조직이 모두 같은 작업을 위해 데이터를 생성하는 것일 수도 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:79
-msgid "|11e0092cabe6445aad58eb94008d2200|"
+msgid "|8445a24f1f144de39b7a75ed40c6d15e|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:115
@@ -26929,7 +26947,7 @@ msgstr ""
 "서버는 데이터 센터 어딘가에 있을 수도 있고 클라우드 어딘가에 있을 수도 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:91
-msgid "|4de4dc335c4e4f7d9295ca4b428cbfd6|"
+msgid "|755d9333fb974843b968cca80677fd80|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:117
@@ -26946,7 +26964,7 @@ msgstr ""
 " 우리가 기본적으로 사용해 온 머신러닝 방법입니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:103
-msgid "|ac43194992e34215bfc57033a6166801|"
+msgid "|3498a6d3e58a467d947b993c9e360b50|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:119
@@ -26969,7 +26987,7 @@ msgstr ""
 "트래픽을 분석하는 것이 있습니다. 이러한 사례에서 모든 데이터는 자연스럽게 중앙 서버에 존재합니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:138
-msgid "|7ff78e3c16f14ec1ac0282d2fad76719|"
+msgid "|2a188f0794ab4c94ae291c4a904bdc9e|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:173
@@ -26986,7 +27004,7 @@ msgstr ""
 "좋은 모델을 훈련하기에 충분하지 않을 수 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:150
-msgid "|09aa0d8c374148f3908afce241381f58|"
+msgid "|b218399a3dc343baae1f9b19e2a9227c|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:175
@@ -27165,7 +27183,7 @@ msgstr ""
 "체크포인트에서 모델 매개변수를 초기화합니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:210
-msgid "|caf1e69f45ff4824853d1f4bc9b083bb|"
+msgid "|3523d79290bc4a63be69fef2590c1f94|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:307
@@ -27193,7 +27211,7 @@ msgstr ""
 "개의 연결 노드만 사용합니다. 그 이유는 점점 더 많은 클라이언트 노드를 선택하면 학습의 효율성이 감소하기 때문입니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:225
-msgid "|8972366fab9a408b8162ddb6475e1095|"
+msgid "|9476e6b0a22a41419620308196c40636|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:309
@@ -27220,7 +27238,7 @@ msgstr ""
 "데이터에서 한 단계 정도로 짧거나 몇 단계(mini-batches)에 불과할 수 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:240
-msgid "|67860439ceff4a16a055b8b51cda19b9|"
+msgid "|dbfe8c1af5014107b27daa1fcce65bb8|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:311
@@ -27246,7 +27264,7 @@ msgstr ""
 "보냅니다. 보내는 모델 업데이트는 전체 모델 파라미터거나 로컬 교육 중에 누적된 그레디언트(gradient)일 수 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:255
-msgid "|f9ca6f1bc91a4f1397f77ed3bf27ac3e|"
+msgid "|428b7d840d2849489b793a181f58c5e9|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:313
@@ -27296,7 +27314,7 @@ msgstr ""
 "많은 영향을 미칩니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:273
-msgid "|65a316b05fef4a7bbfe03a9c9aa84b4f|"
+msgid "|c09acc254ead4842bf4b56e6398d9265|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:315
@@ -27416,7 +27434,7 @@ msgstr ""
 "사용자는 모든 워크로드, 머신러닝 프레임워크 및 모든 프로그래밍 언어를 통합할 수 있습니다."
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:334
-msgid "|09111c31a80a4af5a651312e46ee31b5|"
+msgid "|d7c0bfeb233648d382e95194fd84a307|"
 msgstr ""
 
 #: ../../source/tutorial-series-what-is-federated-learning.ipynb:340
@@ -34673,5 +34691,47 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "|2a721cef360b4f64a96d2647381767d1|"
+#~ msgstr ""
+
+#~ msgid "|2de22ebd50a840dba14a673c6fed3ed5|"
+#~ msgstr ""
+
+#~ msgid "|40524cd4aa474db2992d8a8c40807297|"
+#~ msgstr ""
+
+#~ msgid "|9da60840ee0644b092f05ba73173f33a|"
+#~ msgstr ""
+
+#~ msgid "|11e0092cabe6445aad58eb94008d2200|"
+#~ msgstr ""
+
+#~ msgid "|4de4dc335c4e4f7d9295ca4b428cbfd6|"
+#~ msgstr ""
+
+#~ msgid "|ac43194992e34215bfc57033a6166801|"
+#~ msgstr ""
+
+#~ msgid "|7ff78e3c16f14ec1ac0282d2fad76719|"
+#~ msgstr ""
+
+#~ msgid "|09aa0d8c374148f3908afce241381f58|"
+#~ msgstr ""
+
+#~ msgid "|caf1e69f45ff4824853d1f4bc9b083bb|"
+#~ msgstr ""
+
+#~ msgid "|8972366fab9a408b8162ddb6475e1095|"
+#~ msgstr ""
+
+#~ msgid "|67860439ceff4a16a055b8b51cda19b9|"
+#~ msgstr ""
+
+#~ msgid "|f9ca6f1bc91a4f1397f77ed3bf27ac3e|"
+#~ msgstr ""
+
+#~ msgid "|65a316b05fef4a7bbfe03a9c9aa84b4f|"
+#~ msgstr ""
+
+#~ msgid "|09111c31a80a4af5a651312e46ee31b5|"
 #~ msgstr ""
 
